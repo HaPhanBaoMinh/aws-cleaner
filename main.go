@@ -17,7 +17,7 @@ import (
 
 func init() {
 	// Set the log level to DEBUG (or any other level you prefer)
-	// os.Setenv("LOG_LEVEL", "DEBUG")
+	os.Setenv("LOG_LEVEL", "DEBUG")
 	logger.InitLogger()
 
 	if err := godotenv.Load(".env"); err != nil {
@@ -67,21 +67,35 @@ func main() {
 		invalidVar = true
 	}
 
-	if deleteCountStr == "" {
-		deleteCountStr = "-1"
-		invalidVar = true
+	var deleteCount *int
+	if deleteCountStr != "" {
+		val, err := strconv.Atoi(deleteCountStr)
+
+		if err != nil {
+			logger.Errorf("Invalid DELETE_COUNT!")
+			invalidVar = true
+		} else {
+			deleteCount = &val
+		}
+	} else {
+		deleteCount = nil
 	}
 
-	deleteCount, err := strconv.Atoi(deleteCountStr)
-	if err != nil {
-		logger.Errorf("Invalid DELETE_COUNT!")
-		invalidVar = true
+	var keepCount *int
+	if keepCountStr != "" {
+		val, err := strconv.Atoi(keepCountStr)
+
+		if err != nil {
+			logger.Errorf("Invalid KEEP_COUNT")
+			invalidVar = true
+		} else {
+			keepCount = &val
+		}
+	} else {
+		keepCount = nil
 	}
-	keepCount, err := strconv.Atoi(keepCountStr)
-	if err != nil {
-		logger.Errorf("Invalid KEEP_COUNT!")
-		invalidVar = true
-	}
+
+	logger.Debug(deleteCountStr)
 
 	if sortBy == "" {
 		sortBy = "created_time"
@@ -100,7 +114,8 @@ func main() {
 
 	switch resourceType {
 	case "ebs-snapshot":
-		services.CleanupSnapshots(ec2Client, tagKey, tagValue, &deleteCount, &keepCount, sortBy)
+		logger.Debug("CleanupSnapshots")
+		services.CleanupSnapshots(ec2Client, tagKey, tagValue, deleteCount, keepCount, sortBy)
 	default:
 		logger.Errorf("Unsupported resource type: %s", resourceType)
 		return
