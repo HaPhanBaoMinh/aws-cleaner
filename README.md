@@ -21,11 +21,11 @@ Designed to run as a **Kubernetes CronJob** or standalone CLI tool.
 | `RESOURCE_TYPE`| Resource type to clean (currently: `ebs-snapshot`) | -              | Yes       |
 | `TAG_KEY`      | Tag key filter                                 | -              | Yes       |
 | `TAG_VALUE`    | Tag value filter                               | -              | Yes       |
-| `DELETE_COUNT` | Number of snapshots to delete (top -> bottom)           | -1 (delete all)| No      |
+| `DELETE_COUNT` | Number of snapshots to delete (top -> bottom)           | -| No      |
 | `KEEP_COUNT`   | Number of snapshots to keep (from the top of the sorted list)   | -               | No |
-| `AWS_REGION`   | AWS region                                     | us-east-1      | Yes      |
-| `SORT_BY`      | Sort order (`created_time_asc` / `created_time_desc`) | created_time | No       |
-| `LOG_LEVEL`    | Logging level (`DEBUG`, `INFO`, `WARN`, `ERROR`)| INFO           | No       |
+| `AWS_REGION`   | AWS region                                     | -| Yes      |
+| `SORT_BY`      | Sort order (`created_time_asc` / `created_time_desc`) | - | No       |
+| `LOG_LEVEL`    | Logging level (`DEBUG`, `INFO`, `WARN`, `ERROR`)| -           | No       |
 
 
 ---
