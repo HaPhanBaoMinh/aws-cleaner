@@ -9,7 +9,7 @@ Designed to run as a **Kubernetes CronJob** or standalone CLI tool.
 ## Features
 - Clean up EBS snapshots filtered by **Tag Key/Value**
 - Sort snapshots by **creation time** (asc/desc)
-- Delete snapshots based on a configured `DELETE_COUNT`
+- Delete snapshots based on a configured `DELETE_COUNT` or `KEEP_COUNT`
 - Structured logging with rotation
 
 ---
