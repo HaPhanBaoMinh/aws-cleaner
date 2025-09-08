@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"sort"
+	"time"
 
 	"aws-cleaner/logger"
 
@@ -72,15 +73,15 @@ func getToDeleteSnapshots(snapshotList []types.Snapshot, deleteCount *int, keepC
 }
 
 func deleteSnapShot(snap types.Snapshot, client *ec2.Client) error {
-	// _, err := client.DeleteSnapshot(context.TODO(), &ec2.DeleteSnapshotInput{
-	// 	SnapshotId: snap.SnapshotId,
-	// })
+	_, err := client.DeleteSnapshot(context.TODO(), &ec2.DeleteSnapshotInput{
+		SnapshotId: snap.SnapshotId,
+	})
 
-	// if err != nil {
-	// 	logger.Errorf("Failed to delete snapshot %v: %v", snap.SnapshotId, err)
-	// } else {
-	// 	logger.Infof("Deleted snapshot %s (%s)", *snap.SnapshotId, snap.StartTime.Format(time.RFC3339))
-	// }
+	if err != nil {
+		logger.Errorf("Failed to delete snapshot %v: %v", snap.SnapshotId, err)
+	} else {
+		logger.Infof("Deleted snapshot %s (%s)", *snap.SnapshotId, snap.StartTime.Format(time.RFC3339))
+	}
 	return nil
 }
 
