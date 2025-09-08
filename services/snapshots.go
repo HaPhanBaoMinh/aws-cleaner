@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 	"sort"
-	"time"
 
 	"aws-cleaner/logger"
 
@@ -13,9 +12,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 )
 
-func printSnapShotsList(snapshotList []types.Snapshot) {
+func printSnapShotsList(snapshotList []types.Snapshot, message string) {
 	for _, snap := range snapshotList {
-		logger.Infof("SnapshotID=%s, StartTime=%s, VolumeId=%s",
+		logger.Infof("%s SnapshotID=%s, StartTime=%s, VolumeId=%s", message,
 			aws.ToString(snap.SnapshotId),
 			snap.StartTime.Format("2006-01-02 15:04:05"),
 			aws.ToString(snap.VolumeId),
@@ -73,14 +72,15 @@ func getToDeleteSnapshots(snapshotList []types.Snapshot, deleteCount *int, keepC
 }
 
 func deleteSnapShot(snap types.Snapshot, client *ec2.Client) error {
-	_, err := client.DeleteSnapshot(context.TODO(), &ec2.DeleteSnapshotInput{
-		SnapshotId: snap.SnapshotId,
-	})
-	if err != nil {
-		logger.Errorf("Failed to delete snapshot %v: %v", snap.SnapshotId, err)
-	} else {
-		logger.Infof("Deleted snapshot %s (%s)", *snap.SnapshotId, snap.StartTime.Format(time.RFC3339))
-	}
+	// _, err := client.DeleteSnapshot(context.TODO(), &ec2.DeleteSnapshotInput{
+	// 	SnapshotId: snap.SnapshotId,
+	// })
+
+	// if err != nil {
+	// 	logger.Errorf("Failed to delete snapshot %v: %v", snap.SnapshotId, err)
+	// } else {
+	// 	logger.Infof("Deleted snapshot %s (%s)", *snap.SnapshotId, snap.StartTime.Format(time.RFC3339))
+	// }
 	return nil
 }
 
@@ -112,7 +112,7 @@ func CleanupSnapshots(client *ec2.Client, tagKey, tagValue string, deleteCount *
 		removeSnapShot = sortByCreatedTime(removeSnapShot, "asc")
 	case "created_time_desc":
 		removeSnapShot = sortByCreatedTime(removeSnapShot, "desc")
-		printSnapShotsList(removeSnapShot)
+		printSnapShotsList(removeSnapShot, "Sort by created time desc: ")
 	default:
 		logger.Error("Not support that sortBy!")
 		os.Exit(1)
@@ -121,7 +121,7 @@ func CleanupSnapshots(client *ec2.Client, tagKey, tagValue string, deleteCount *
 	// Delete count
 	logger.Debug("getToDeleteSnapshots")
 	removeSnapShot = getToDeleteSnapshots(removeSnapShot, deleteCount, keepCount)
-	printSnapShotsList(removeSnapShot)
+	printSnapShotsList(removeSnapShot, "Delete Snapshot: ")
 
 	for _, snap := range removeSnapShot {
 		deleteSnapShot(snap, client)
