@@ -78,7 +78,8 @@ spec:
                   value: "Environment"
                 - name: TAG_VALUE
                   value: "dev"
-                - name: DELETE_COUNT \ KEEP_COUNT
+                # Use either DELETE_COUNT or KEEP_COUNT (not both)
+                - name: KEEP_COUNT
                   value: "2"
                 - name: SORT_BY
                   value: "created_time_desc"

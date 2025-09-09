@@ -7,14 +7,15 @@ package logger
 import (
 	"compress/gzip"
 	"fmt"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
-	"gopkg.in/natefinch/lumberjack.v2"
 	"io"
 	"os"
 	"strings"
 	"sync"
 	"time"
+
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 // Global logger instance
@@ -44,7 +45,7 @@ func InitLogger() {
 
 	core := zapcore.NewCore(
 		zapcore.NewJSONEncoder(encCfg),
-		zapcore.AddSync(os.Stdout), // <-- chỉ STDOUT
+		zapcore.AddSync(os.Stdout),
 		zap.NewAtomicLevelAt(level),
 	)
 

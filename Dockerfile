@@ -4,7 +4,6 @@
 FROM --platform=$BUILDPLATFORM golang:1.22-alpine AS build
 WORKDIR /src
 
-# certs cho HTTPS, cài ở build stage
 RUN apk add --no-cache ca-certificates
 
 ENV CGO_ENABLED=0 GOOS=linux GO111MODULE=on
@@ -20,7 +19,6 @@ RUN go build -trimpath -ldflags="-s -w" -o /out/aws-cleaner ./
 FROM scratch
 WORKDIR /
 
-# copy CA certs đã cài ở build stage
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 # copy binary

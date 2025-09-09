@@ -109,6 +109,7 @@ func main() {
 	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(awsRegion))
 	if err != nil {
 		logger.Errorf("Unable to load SDK config: %v", err)
+		return
 	}
 	ec2Client := ec2.NewFromConfig(cfg)
 
