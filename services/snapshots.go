@@ -144,7 +144,6 @@ func CleanupSnapshots(client *ec2.Client, tagKey, tagValue string, deleteCount *
 	}
 
 	// Delete count
-	logger.Debug("getToDeleteSnapshots")
 	removeSnapShot = getToDeleteSnapshots(removeSnapShot, deleteCount, keepCount)
 	printSnapShotsList(removeSnapShot, "Delete Snapshot: ")
 
