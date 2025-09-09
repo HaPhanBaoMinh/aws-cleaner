@@ -74,6 +74,15 @@ func getToDeleteSnapshots(snapshotList []types.Snapshot, deleteCount *int, keepC
 		return snapshotList[*keepCount:] // delete everything after the first N
 	}
 
+	if keepCount != nil && *keepCount == 0 {
+		return snapshotList
+	}
+
+	if keepCount != nil && *keepCount < 0 {
+		logger.Errorf("Keep count must be greater than 0")
+		return []types.Snapshot{}
+	}
+
 	// If deleteCount is set -> delete the first N items
 	if deleteCount != nil {
 		if *deleteCount == 0 {
